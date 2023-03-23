@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="imagenonboarding" type="id" />
+    <item name="textitle" type="id" />
+    <item name="textdescription" type="id" />
+</resources>
