@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@id/nav_Maps">
+    <fragment
+        android:id="@+id/nav_Maps"
+        android:name="com.example.test3.usecase.map.MapFragment"
+        android:label="@string/menu_mapas"
+        tools:layout="@layout/fragment_map" />
+    <fragment
+        android:id="@+id/nav_config"
+        android:name="com.example.test3.usecase.configuracion.ConfiguracionFragment"
+        android:label="@string/menu_Config"
+        tools:layout="@layout/fragment_configuracion" />
+</navigation>

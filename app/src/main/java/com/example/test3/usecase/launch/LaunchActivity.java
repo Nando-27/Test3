@@ -18,12 +18,8 @@ public class LaunchActivity extends AppCompatActivity {
 
         setContentView(binding.getRoot());
 
-        setup();
         Data();
 
-    }
-    private void setup() {
-        getSupportActionBar().hide();
     }
     private void Data() {
         showOnboarding();

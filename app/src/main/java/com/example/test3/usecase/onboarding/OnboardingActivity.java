@@ -2,6 +2,7 @@ package com.example.test3.usecase.onboarding;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
@@ -28,6 +29,7 @@ public class OnboardingActivity extends AppCompatActivity {
     private LinearLayout layoutonboardingindicators;
     private MaterialButton materialButtonactiononboarding;
     private OnboardingPageAdapter onboardingAdapter;
+    private OnboardingViewModel onboardingViewModel;
 
     private HomeRouter homeRouter;
 
@@ -56,13 +58,15 @@ public class OnboardingActivity extends AppCompatActivity {
     }
 
     private void setup() {
-        getSupportActionBar().hide();
+        onboardingViewModel = new ViewModelProvider(this).get(OnboardingViewModel.class);
+
+
     }
 
     private void ItemsOnboarding() {
         layoutonboardingindicators = findViewById(R.id.layoutonboardingIndicador);
         materialButtonactiononboarding = findViewById(R.id.btnOnboarding);
-        onboardingAdapter = setupOnboardingItems();
+        onboardingAdapter = onboardingViewModel.getAdapter().getValue();
 
         ViewPager2 onboardingviewpager = findViewById(R.id.OnboardingViewPager);
 
@@ -134,29 +138,5 @@ public class OnboardingActivity extends AppCompatActivity {
     }
 
 
-    private OnboardingPageAdapter setupOnboardingItems(){
 
-        List<OnboardingModel> onboardingitems = new ArrayList<>();
-
-        OnboardingModel itemPayOnline = new OnboardingModel();
-        itemPayOnline.setTitle("Paga tus facturas Online");
-        itemPayOnline.setDescription("Las Facturas de agua, luz, gas y ademas mucho mas por su telefono");
-        itemPayOnline.setImage(R.drawable.agreement);
-
-        OnboardingModel itemonthway = new OnboardingModel();
-        itemonthway.setTitle("Tus recibos no son los ultimo");
-        itemonthway.setDescription("No te endeudes utiliza yape");
-        itemonthway.setImage(R.drawable.drinkwelcome);
-
-        OnboardingModel itemsaludo =new OnboardingModel();
-        itemsaludo.setTitle("Bienvenido a nuestra APP");
-        itemsaludo.setDescription("Eres lo mas importante para funcuionar en la vida");
-        itemsaludo.setImage(R.drawable.usher);
-
-        onboardingitems.add(itemPayOnline);
-        onboardingitems.add(itemonthway);
-        onboardingitems.add(itemsaludo);
-        onboardingAdapter = new OnboardingPageAdapter(onboardingitems);
-        return onboardingAdapter;
-    }
 }
