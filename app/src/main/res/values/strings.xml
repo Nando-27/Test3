@@ -15,4 +15,8 @@
     <string name="action_settings">Settings</string>
     <string name="todo">TODO</string>
 
+    <string name="api_key">AIzaSyANuX06MEy3IKfrVOCGiL3TJ5v_saXQryc</string>
+    <string name="mapasFragment">Fragmento de mapa</string>
+    <string name="mapas">mapas</string>
+
 </resources>

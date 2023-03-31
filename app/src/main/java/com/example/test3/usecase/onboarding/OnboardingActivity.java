@@ -1,12 +1,15 @@
 package com.example.test3.usecase.onboarding;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -50,6 +53,7 @@ public class OnboardingActivity extends AppCompatActivity {
         boolean firtstart = sharedPreferences.getBoolean( "firstStart", true);
 
         if (firtstart){
+            getLocalizacion();
             ItemsOnboarding();
         }else {
             homeRouter.launch(this);
@@ -137,6 +141,14 @@ public class OnboardingActivity extends AppCompatActivity {
         }
     }
 
-
+    private void getLocalizacion() {
+        int permiso = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION);
+        if(permiso == PackageManager.PERMISSION_DENIED){
+            if(ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)){
+            }else{
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            }
+        }
+    }
 
 }
