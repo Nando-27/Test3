@@ -18,5 +18,8 @@
     <string name="api_key">AIzaSyANuX06MEy3IKfrVOCGiL3TJ5v_saXQryc</string>
     <string name="mapasFragment">Fragmento de mapa</string>
     <string name="mapas">mapas</string>
+    <string name="text">text</string>
+    <string name="textbutton">btntext</string>
+    <string name="btnguardar">Guardar</string>
 
 </resources>

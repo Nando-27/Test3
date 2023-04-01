@@ -1,5 +1,6 @@
 package com.example.test3.usecase.map;
 
+import static android.content.ContentValues.TAG;
 import static android.content.Context.LOCATION_SERVICE;
 
 import android.content.pm.PackageManager;
@@ -17,6 +18,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.example.test3.R;
 import com.example.test3.databinding.FragmentMapBinding;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -26,16 +31,35 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener {
 
     private FragmentMapBinding binding;
+    private TextView coordenadas;
+    private Button btnguardar;
+    private FirebaseFirestore db;
 
     GoogleMap nMap;
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setup();
+         db = FirebaseFirestore.getInstance();
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMapBinding.inflate(inflater,container,false);
         View root = binding.getRoot();
+
+
 
         SupportMapFragment supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.maps);
         supportMapFragment.getMapAsync(this);
@@ -45,10 +69,50 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         return root;
     }
 
+    private void setup() {
+        coordenadas = (TextView) getView().findViewById(R.id.txtcoordenadas);
+        btnguardar = (Button) getView().findViewById(R.id.btnguardar);
+
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private void guardardatos() {
+        btnguardar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String cordenadas = coordenadas.getText().toString().trim();
+                if (cordenadas.isEmpty()){
+                    Toast.makeText(getActivity(),"Selecione una ubicacion", Toast.LENGTH_SHORT).show();
+                }else {
+                    guardarDatosbd(cordenadas);
+                }
+            }
+        });
+    }
+
+    private void guardarDatosbd(String cordenadas) {
+
+        Map<String, Object> bdtest= new HashMap<>();
+        bdtest.put("coordenadas",cordenadas);
+
+        db.collection("BDTest")
+                .document(cordenadas.toString())
+                .set(bdtest).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Toast.makeText(getActivity(),"Ubicacion Guardada", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getActivity(),"Error al guardar", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     @Override
@@ -66,11 +130,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     @Override
     public void onMapClick(@NonNull LatLng latLng) {
         Marcador(latLng);
+        guardardatos();
     }
+
+
 
     @Override
     public void onMapLongClick(@NonNull LatLng latLng) {
         Marcador(latLng);
+        guardardatos();
     }
 
 
@@ -91,6 +159,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         nMap.clear();
         LatLng marcador = new LatLng(latLng.latitude, latLng.longitude);
         nMap.addMarker(new MarkerOptions().position(marcador).title(" Latitud: "+latLng.latitude+" Longitud: "+latLng.longitude));
+        coordenadas.setText(""+marcador.latitude+" "+marcador.longitude);
 
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(marcador)

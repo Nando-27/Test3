@@ -1,5 +1,8 @@
 package com.example.test3.usecase.home;
 
+import android.os.Bundle;
+import android.view.Menu;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
@@ -7,14 +10,9 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.View;
-
 import com.example.test3.R;
 import com.example.test3.databinding.ActivityHomeBinding;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 
 public class HomeActivity extends AppCompatActivity {
 

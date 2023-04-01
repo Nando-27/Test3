@@ -6,6 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".usecase.onboarding.OnboardingActivity">
 
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/OnboardingViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnOnboarding"
         android:layout_width="wrap_content"
@@ -16,13 +21,9 @@
         app:cornerRadius="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/text"
         />
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/OnboardingViewPager"
-        />
     <LinearLayout
         android:id="@+id/layoutonboardingIndicador"
         android:layout_width="0dp"
