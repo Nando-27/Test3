@@ -24,21 +24,24 @@ import android.widget.Toast;
 
 import com.example.test3.R;
 import com.example.test3.databinding.FragmentMapBinding;
+import com.example.test3.model.MapModel;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,6 +52,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private TextView coordenadas;
     private Button btnguardar;
     private FirebaseFirestore db;
+
+    private ClusterManager<MapModel> clusterManager;
 
     private String Latitud, Longitud;
 
@@ -65,13 +70,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         binding = FragmentMapBinding.inflate(inflater,container,false);
         View root = binding.getRoot();
         db = FirebaseFirestore.getInstance();
-
         SupportMapFragment supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.maps);
         supportMapFragment.getMapAsync(this);
-
         MapViewModel mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
-
-
         Obtenerdatos();
 
         return root;
@@ -99,7 +100,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 if (cordenadas.isEmpty()){
                     Toast.makeText(getActivity(),"Selecione una ubicacion", Toast.LENGTH_SHORT).show();
                 }else {
+
                     guardarDatosbd(cordenadas);
+                    Obtenerdatos();
                 }
             }
         });
@@ -127,26 +130,56 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 });
     }
     private void Obtenerdatos(){
-        db.collection("BDTest")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Toast.makeText(getActivity(),"Actualizando", Toast.LENGTH_SHORT).show();
-                                LatLng marcador = new LatLng(
-                                        Double.valueOf(document.getString("Latitud")),
-                                        Double.valueOf(document.getString("Longitud")));
+            db.collection("BDTest")
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                LatLngBounds.Builder costructor = new LatLngBounds.Builder();
+                                for (QueryDocumentSnapshot document : task.getResult()) {
 
-                                nMap.addMarker(new MarkerOptions().position(marcador).title(" Latitud: "+document.getString("Latitud")+" Longitud: "+document.getString("Longitud")));
+                                    double lat = Double.parseDouble(document.getString("Latitud"));
+                                    double lng = Double.parseDouble(document.getString("Longitud"));
+                                    Toast.makeText(getActivity(),"Actualizando", Toast.LENGTH_SHORT).show();
+                                    LatLng marcador = new LatLng(lat,lng);
 
+                                    nMap.addMarker(new MarkerOptions()
+                                            .position(marcador)
+                                            .title(marcador.toString()));
+                                    costructor.include(marcador);
+
+                                }
+
+                                    LatLngBounds limite = costructor.build();
+
+                                    int ancho = getResources().getDisplayMetrics().widthPixels;
+                                    int alto = getResources().getDisplayMetrics().heightPixels;
+                                    int padding = (int) (alto * 0.10);
+
+                                    CameraUpdate centrar = CameraUpdateFactory.newLatLngBounds(limite,ancho,alto,padding);
+                                    nMap.animateCamera(centrar);
+                            } else {
+                                Toast.makeText(getActivity(),"Error al cargar", Toast.LENGTH_SHORT).show();
                             }
-                        } else {
-                            Toast.makeText(getActivity(),"Error al cargar", Toast.LENGTH_SHORT).show();
                         }
-                    }
-                });
+                    });
+    }
+
+    private void SetClusterer(LatLng marcador) {
+        clusterManager = new ClusterManager<MapModel>(getActivity(), nMap);
+        nMap.setOnCameraIdleListener(clusterManager);
+
+        addItems(marcador);
+
+    }
+
+    private void addItems(LatLng marcador) {
+
+        for (int i = 0; i < 10; i++) {
+            MapModel offsetItem = new MapModel(marcador.latitude, marcador.longitude, "Title " + i, "Snippet " + i);
+            clusterManager.addItem(offsetItem);
+        }
     }
 
     @Override
@@ -157,7 +190,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         nMap.setMinZoomPreference(5);
         nMap.setMaxZoomPreference(16);
         getLocalizacionON();
-        Mizona();
         this.nMap.setOnMapClickListener(this);
         this.nMap.setOnMapLongClickListener(this);
     }
@@ -165,7 +197,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     public void onMapClick(@NonNull LatLng latLng) {
         Marcador(latLng);
         guardardatos();
+
     }
+
 
 
 
@@ -177,21 +211,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
 
 
-    private void Mizona() {
-        LatLng  zona = new LatLng(-8.1,-79.0);
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(zona)
-                .zoom(10)
-                .tilt(45)
-                .build();
-        nMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-    }
-
-
     private void Marcador(LatLng latLng) {
 
         nMap.clear();
-        Obtenerdatos();
         LatLng marcador = new LatLng(latLng.latitude, latLng.longitude);
         nMap.addMarker(new MarkerOptions().position(marcador).title(" Latitud: "+latLng.latitude+" Longitud: "+latLng.longitude));
         coordenadas.setText(""+marcador.latitude+" "+marcador.longitude);
