@@ -21,5 +21,6 @@
     <string name="text">text</string>
     <string name="textbutton">btntext</string>
     <string name="btnguardar">Guardar</string>
+    <string name="btncancelar">Cancelar</string>
 
 </resources>

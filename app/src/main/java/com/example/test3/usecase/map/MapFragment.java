@@ -3,6 +3,8 @@ package com.example.test3.usecase.map;
 import static android.content.ContentValues.TAG;
 import static android.content.Context.LOCATION_SERVICE;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +41,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -50,12 +54,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
     private FragmentMapBinding binding;
     private TextView coordenadas;
-    private Button btnguardar;
     private FirebaseFirestore db;
 
     private ClusterManager<MapModel> clusterManager;
 
     private String Latitud, Longitud;
+    private BottomSheetDialog bottomSheetDialog;
+    private View bottomSheetView;
 
     GoogleMap nMap;
 
@@ -68,22 +73,34 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMapBinding.inflate(inflater,container,false);
+
         View root = binding.getRoot();
         db = FirebaseFirestore.getInstance();
+
         SupportMapFragment supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.maps);
         supportMapFragment.getMapAsync(this);
+
         MapViewModel mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
+
         Obtenerdatos();
-
         return root;
-
     }
 
     private void setup() {
-        coordenadas = (TextView) getView().findViewById(R.id.txtcoordenadas);
-        btnguardar = (Button) getView().findViewById(R.id.btnguardar);
         Latitud = "";
         Longitud = "";
+
+        bottomSheetDialog = new BottomSheetDialog(
+                getActivity(), R.style.BotomSheetDialogTheme
+        );
+        bottomSheetView = LayoutInflater.from(getActivity().getApplicationContext())
+                .inflate(
+                        R.layout.layout_botomsheet,
+                        (LinearLayout) getView().findViewById(R.id.bottomsheetcontainer)
+                );
+
+
+        coordenadas = bottomSheetView.findViewById(R.id.txtcoordenadasbt);
     }
 
     @Override
@@ -92,21 +109,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         binding = null;
     }
 
-    private void guardardatos() {
-        btnguardar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String cordenadas = coordenadas.getText().toString().trim();
-                if (cordenadas.isEmpty()){
-                    Toast.makeText(getActivity(),"Selecione una ubicacion", Toast.LENGTH_SHORT).show();
-                }else {
-
-                    guardarDatosbd(cordenadas);
-                    Obtenerdatos();
-                }
-            }
-        });
-    }
 
     private void guardarDatosbd(String cordenadas) {
 
@@ -136,6 +138,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
+                                nMap.clear();
                                 LatLngBounds.Builder costructor = new LatLngBounds.Builder();
                                 for (QueryDocumentSnapshot document : task.getResult()) {
 
@@ -159,6 +162,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
                                     CameraUpdate centrar = CameraUpdateFactory.newLatLngBounds(limite,ancho,alto,padding);
                                     nMap.animateCamera(centrar);
+
                             } else {
                                 Toast.makeText(getActivity(),"Error al cargar", Toast.LENGTH_SHORT).show();
                             }
@@ -166,27 +170,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                     });
     }
 
-    private void SetClusterer(LatLng marcador) {
-        clusterManager = new ClusterManager<MapModel>(getActivity(), nMap);
-        nMap.setOnCameraIdleListener(clusterManager);
-
-        addItems(marcador);
-
-    }
-
-    private void addItems(LatLng marcador) {
-
-        for (int i = 0; i < 10; i++) {
-            MapModel offsetItem = new MapModel(marcador.latitude, marcador.longitude, "Title " + i, "Snippet " + i);
-            clusterManager.addItem(offsetItem);
-        }
-    }
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
 
         nMap = googleMap;
-
         nMap.setMinZoomPreference(5);
         nMap.setMaxZoomPreference(16);
         getLocalizacionON();
@@ -196,7 +184,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     @Override
     public void onMapClick(@NonNull LatLng latLng) {
         Marcador(latLng);
-        guardardatos();
 
     }
 
@@ -206,27 +193,54 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     @Override
     public void onMapLongClick(@NonNull LatLng latLng) {
         Marcador(latLng);
-        guardardatos();
     }
 
+    private void DetallesUbicacion() {
 
+        Button btnguardar = bottomSheetView.findViewById(R.id.btnguardarbt);
+        Button btncancelar = bottomSheetView.findViewById(R.id.btnCancelar);
+        btnguardar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                guardarDatosbd(coordenadas.getText().toString());
+                Obtenerdatos();
+                bottomSheetDialog.dismiss();
+            }
+        });
+
+        btncancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetDialog.dismiss();
+                Obtenerdatos();
+            }
+        });
+
+        bottomSheetDialog.setContentView(bottomSheetView);
+        bottomSheetDialog.show();
+        bottomSheetDialog.setCancelable(false);
+    }
 
     private void Marcador(LatLng latLng) {
 
         nMap.clear();
         LatLng marcador = new LatLng(latLng.latitude, latLng.longitude);
-        nMap.addMarker(new MarkerOptions().position(marcador).title(" Latitud: "+latLng.latitude+" Longitud: "+latLng.longitude));
-        coordenadas.setText(""+marcador.latitude+" "+marcador.longitude);
+
         Latitud = String.valueOf(marcador.latitude);
         Longitud = String.valueOf(marcador.longitude);
+        coordenadas.setText("Latitud: "+Latitud+" Longitud: "+Longitud);
+
+        nMap.addMarker(new MarkerOptions().position(marcador).title(" Latitud: "+Latitud+" Longitud: "+Longitud));
+
 
 
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(marcador)
-                .zoom(16)
-                .tilt(45)
+                .zoom(15)
                 .build();
         nMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+        DetallesUbicacion();
     }
 
     private void getLocalizacionON(){
