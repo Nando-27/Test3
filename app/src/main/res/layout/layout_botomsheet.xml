@@ -1,24 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/bottomsheetcontainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/botom_sheet_background"
+    android:background="@drawable/botom_sheet_background_ligth"
     android:orientation="vertical">
     <TextView
         android:id="@+id/txtcoordenadasbt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/text"
+        android:text="@string/txtcoordenadas"
         android:textAlignment="center"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:layout_marginBottom="10dp"
         android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"/>
-    <LinearLayout
+        android:layout_marginStart="10dp"
+        android:textSize="15sp"
+        android:textColor="@color/white"/>
+
+    <Spinner
+        android:id="@+id/spTiposIncidencias"
+        style="@style/Widget.AppCompat.Spinner.DropDown"
         android:layout_width="match_parent"
+        android:textAlignment="center"
+        android:layout_height="48dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtHora"
+            android:hint="Selecciona la Hora"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            />
+        <TextView
+            android:id="@+id/txtFecha"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:hint="Selecciona la fecha"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_gravity="center"
         android:padding="2dp">
         <Button
             android:id="@+id/btnCancelar"
@@ -26,16 +77,19 @@
             android:layout_height="wrap_content"
             android:text="@string/btncancelar"
             android:layout_weight="1"
+            android:textSize="15sp"
             android:layout_margin="10dp"
-            />
+            tools:ignore="ButtonStyle" />
 
         <Button
             android:id="@+id/btnguardarbt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/btnguardar"
+            android:textSize="15sp"
             android:layout_weight="1"
-            android:layout_margin="10dp"/>
+            android:layout_margin="10dp"
+            tools:ignore="ButtonStyle" />
 
     </LinearLayout>
 

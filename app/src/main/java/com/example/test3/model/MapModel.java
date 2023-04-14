@@ -6,36 +6,47 @@ import androidx.annotation.Nullable;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
-public class MapModel implements ClusterItem {
+public class MapModel{
 
-    private final LatLng position;
-    private final String title;
-    private final String snippet;
+    private String Coordenadas;
+    private String Latitud;
+    private String Longitud;
 
-    public MapModel(double lat, double lng, String title, String snippet) {
-        position = new LatLng(lat, lng);
-        this.title = title;
-        this.snippet = snippet;
+    public MapModel() {
     }
 
-    @NonNull
+    public MapModel(String coordenadas, String latitud, String longitud) {
+        Coordenadas = coordenadas;
+        Latitud = latitud;
+        Longitud = longitud;
+    }
+
+    public String getCoordenadas() {
+        return Coordenadas;
+    }
+
+    public void setCoordenadas(String coordenadas) {
+        Coordenadas = coordenadas;
+    }
+
+    public String getLatitud() {
+        return Latitud;
+    }
+
+    public void setLatitud(String latitud) {
+        Latitud = latitud;
+    }
+
+    public String getLongitud() {
+        return Longitud;
+    }
+
+    public void setLongitud(String longitud) {
+        Longitud = longitud;
+    }
+
     @Override
-    public LatLng getPosition() {
-        return position;
-    }
-
-    @Override
-    public String getTitle() {
-        return title;
-    }
-
-    @Override
-    public String getSnippet() {
-        return snippet;
-    }
-
-    @Nullable
-    public Float getZIndex() {
-        return 0f;
+    public String toString() {
+        return  Coordenadas.toString() ;
     }
 }
