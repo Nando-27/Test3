@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="Registrar Incidencia"
+        android:textSize="24sp"
+        android:textColor="@color/black"
+        />
+    <TextView
+        android:id="@+id/txtCoordenadasRegistrar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:text="Coordenadas: "
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"/>
+
+    <TextView
+        android:textSize="12sp"
+        android:id="@+id/txtLugarr"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Lugar: "
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp" />
+
+    <TextView
+        android:id="@+id/txtTipo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tipo de incidencia:"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <TextView android:textSize="12.0sp"
+            android:id="@+id/txtrHora"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10.0dip"
+            android:layout_marginBottom="10.0dip"
+            android:text="Hora: "
+            android:layout_weight="1.0"
+            android:layout_marginStart="10.0dip"
+            android:layout_marginEnd="10.0dip" />
+
+        <TextView android:textSize="12.0sp"
+            android:id="@+id/txtrfecha"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10.0dip"
+            android:layout_marginBottom="10.0dip"
+            android:text="Fecha: "
+            android:layout_weight="1.0"
+            android:layout_marginStart="10.0dip"
+            android:layout_marginEnd="10.0dip" />
+    </LinearLayout>
+
+    <EditText
+        android:hint="Descripcion"
+        android:id="@+id/txtDescripcion"
+        android:layout_width="match_parent"
+        android:layout_height="120sp"
+        android:textSize="12.0sp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:inputType="textMultiLine"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"/>
+
+    <LinearLayout android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <Button android:textSize="15.0sp"
+            android:id="@+id/btnguardarr"
+            android:layout_width="0.0dip"
+            android:layout_height="wrap_content"
+            android:layout_margin="10.0dip"
+            android:text="@string/btnguardar"
+            android:layout_weight="1.0" />
+    </LinearLayout>
+
+
+
+</LinearLayout>

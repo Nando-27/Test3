@@ -1,13 +1,6 @@
 package com.example.test3.usecase.onboarding;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.viewpager2.widget.ViewPager2;
-
 import android.Manifest;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -15,16 +8,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.viewpager2.widget.ViewPager2;
+
 import com.example.test3.R;
 import com.example.test3.databinding.ActivityOnboardingBinding;
-import com.example.test3.model.OnboardingModel;
-import com.example.test3.usecase.home.HomeActivity;
 import com.example.test3.usecase.home.HomeRouter;
 import com.example.test3.usecase.onboarding.Page.OnboardingPageAdapter;
 import com.google.android.material.button.MaterialButton;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class OnboardingActivity extends AppCompatActivity {
 

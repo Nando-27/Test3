@@ -13,7 +13,6 @@ import java.util.List;
 
 public class OnboardingViewModel extends ViewModel {
     private final MutableLiveData<OnboardingPageAdapter> adapter;
-    private OnboardingPageAdapter onboardingAdapter;
 
     public OnboardingViewModel(){
         adapter = new MutableLiveData<>();
@@ -46,7 +45,6 @@ public class OnboardingViewModel extends ViewModel {
         onboardingitems.add(itemPayOnline);
         onboardingitems.add(itemonthway);
         onboardingitems.add(itemsaludo);
-        onboardingAdapter = new OnboardingPageAdapter(onboardingitems);
-        return onboardingAdapter;
+        return new OnboardingPageAdapter(onboardingitems);
     }
 }

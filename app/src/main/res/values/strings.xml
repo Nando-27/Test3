@@ -19,6 +19,7 @@
     <string name="mapasFragment">Fragmento de mapa</string>
     <string name="mapas">mapas</string>
     <string name="text">text</string>
+    <string name="txtcoordenadas">Coordenadas: </string>
     <string name="textbutton">btntext</string>
     <string name="btnguardar">Guardar</string>
     <string name="btncancelar">Cancelar</string>
